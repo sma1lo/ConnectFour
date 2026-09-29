@@ -25,4 +25,33 @@ public class Board {
         }
         return null;
     }
+
+    public boolean canPlace(Cell cell) {
+        if (cell == null) {
+            return false;
+        }
+
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+            return false;
+        }
+
+        if (cells[row][col].getState() != State.NONE) {
+            return false;
+        }
+
+        if (row == Board.ROWS - 1) {
+            return true;
+        }
+
+        Cell cellBelow = cells[row + 1][col];
+
+        if (cellBelow != null && cellBelow.getState() != State.NONE) {
+            return true;
+        }
+
+        return false;
+    }
 }
