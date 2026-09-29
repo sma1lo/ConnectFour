@@ -4,6 +4,7 @@ public class Board {
     public static final int ROWS = 6;
     public static final int COLS = 7;
     private final Cell[][] cells;
+    private int moveCount = 0;
 
     public Board() {
         cells = new Cell[ROWS][COLS];
@@ -53,5 +54,43 @@ public class Board {
         }
 
         return false;
+    }
+
+    public boolean makeMove(Cell cell) {
+        if (!canPlace(cell)) {
+            return false;
+        }
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        this.cells[row][col] = new Cell(row, col, cell.getState());
+
+        moveCount++;
+        return true;
+    }
+
+    public int getMoves() {
+        return this.moveCount;
+    }
+
+    public boolean undoMove(Cell cell) {
+        if (cell == null) {
+            return false;
+        }
+
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+            return false;
+        }
+
+        if (cells[row][col].getState() == State.NONE) {
+            return false;
+        }
+
+        this.cells[row][col] = new Cell(row, col, State.NONE);
+        moveCount--;
+        return true;
     }
 }
