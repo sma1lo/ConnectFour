@@ -93,4 +93,48 @@ public class Board {
         moveCount--;
         return true;
     }
+
+    public boolean checkWin(int startRow, int startCol) {
+        Cell startCell = getCell(startRow, startCol);
+        if (startCell == null || startCell.getState() == State.NONE) {
+            return false;
+        }
+        State targetState = startCell.getState();
+
+        int[][] dirs = {
+                {0, 1},
+                {1, 0},
+                {1, 1},
+                {1, -1}
+        };
+
+        for (int[] dir : dirs) {
+            int dRow = dir[0];
+            int dCol = dir[1];
+
+            int count = 1;
+
+            int r = startRow + dRow;
+            int c = startCol + dCol;
+            while (r >= 0 && r < ROWS && c >= 0 && c < COLS && cells[r][c].getState() == targetState) {
+                count++;
+                r += dRow;
+                c += dCol;
+            }
+
+            r = startRow - dRow;
+            c = startCol - dCol;
+            while (r >= 0 && r < ROWS && c >= 0 && c < COLS && cells[r][c].getState() == targetState) {
+                count++;
+                r -= dRow;
+                c -= dCol;
+            }
+
+            if (count >= 4) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
