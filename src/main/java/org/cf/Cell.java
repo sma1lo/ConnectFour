@@ -3,9 +3,9 @@ package org.cf;
 public class Cell {
     private int row;
     private int col;
-    private State state;
+    private BoardState state;
 
-    public Cell(int row, int col, State state) {
+    public Cell(int row, int col, BoardState state) {
         this.row = row;
         this.col = col;
         this.state = state;
@@ -19,7 +19,7 @@ public class Cell {
         return col;
     }
 
-    public State getState() {
+    public BoardState getState() {
         return state;
     }
 
@@ -31,7 +31,7 @@ public class Cell {
         this.col = col;
     }
 
-    public void setState(State state) {
+    public void setState(BoardState state) {
         this.state = state;
     }
 }

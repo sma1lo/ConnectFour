@@ -11,7 +11,7 @@ public class Board {
 
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                this.cells[row][col] = new Cell(row, col, State.NONE);
+                this.cells[row][col] = new Cell(row, col, BoardState.NONE);
             }
         }
     }
@@ -39,7 +39,7 @@ public class Board {
             return false;
         }
 
-        if (cells[row][col].getState() != State.NONE) {
+        if (cells[row][col].getState() != BoardState.NONE) {
             return false;
         }
 
@@ -49,11 +49,19 @@ public class Board {
 
         Cell cellBelow = cells[row + 1][col];
 
-        if (cellBelow != null && cellBelow.getState() != State.NONE) {
+        if (cellBelow != null && cellBelow.getState() != BoardState.NONE) {
             return true;
         }
 
         return false;
+    }
+
+    public int getAvailableRow(int col) {
+        for (int row = Board.ROWS - 1; row >= 0; row--)
+            if(this.cells[row][col].getState() == BoardState.NONE){
+                return row;
+        }
+        return -1;
     }
 
     public boolean makeMove(Cell cell) {
@@ -85,21 +93,21 @@ public class Board {
             return false;
         }
 
-        if (cells[row][col].getState() == State.NONE) {
+        if (cells[row][col].getState() == BoardState.NONE) {
             return false;
         }
 
-        this.cells[row][col] = new Cell(row, col, State.NONE);
+        this.cells[row][col] = new Cell(row, col, BoardState.NONE);
         moveCount--;
         return true;
     }
 
     public boolean checkWin(int startRow, int startCol) {
         Cell startCell = getCell(startRow, startCol);
-        if (startCell == null || startCell.getState() == State.NONE) {
+        if (startCell == null || startCell.getState() == BoardState.NONE) {
             return false;
         }
-        State targetState = startCell.getState();
+        BoardState targetState = startCell.getState();
 
         int[][] dirs = {
                 {0, 1},
