@@ -58,9 +58,9 @@ public class Board {
 
     public int getAvailableRow(int col) {
         for (int row = Board.ROWS - 1; row >= 0; row--)
-            if(this.cells[row][col].getState() == BoardState.NONE){
+            if (this.cells[row][col].getState() == BoardState.NONE) {
                 return row;
-        }
+            }
         return -1;
     }
 
