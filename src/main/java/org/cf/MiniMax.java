@@ -5,7 +5,7 @@ import java.util.Random;
 public class MiniMax {
     private final Board board;
     private final Random random = new Random();
-    private static final int DEPTH = 5;
+    private static final int DEPTH = 9;
 
     public MiniMax(Board board) {
         this.board = board;
@@ -14,6 +14,8 @@ public class MiniMax {
     public int findBestMove(BoardState state) {
         int bestMoveCol = -1;
         int bestValue = Integer.MIN_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
 
         for (int col = 0; col < Board.COLS; col++) {
             int row = board.getAvailableRow(col);
@@ -21,13 +23,18 @@ public class MiniMax {
                 Cell cell = new Cell(row, col, state);
                 this.board.makeMove(cell);
 
-                int moveValue = minimax(DEPTH - 1, false, row, col);
+                int moveValue = minimax(DEPTH - 1, false, row, col, alpha, beta);
 
                 this.board.undoMove(cell);
 
                 if (moveValue > bestValue) {
                     bestValue = moveValue;
                     bestMoveCol = col;
+                }
+                alpha = Math.max(alpha, moveValue);
+
+                if (beta <= alpha) {
+                    break;
                 }
             }
         }
@@ -42,7 +49,7 @@ public class MiniMax {
         return bestMoveCol;
     }
 
-    private int minimax(int depth, boolean isMaximizing, int lastRow, int lastCol) {
+    private int minimax(int depth, boolean isMaximizing, int lastRow, int lastCol, int alpha, int beta) {
         if (lastRow != -1 && board.checkWin(lastRow, lastCol)) {
             return isMaximizing ? -1000 : 1000;
         }
@@ -56,10 +63,15 @@ public class MiniMax {
                 if (row != -1) {
                     Cell cell = new Cell(row, col, BoardState.TEAM_A);
                     this.board.makeMove(cell);
-                    int moveValue = minimax(depth - 1, false, row, col);
+                    int moveValue = minimax(depth - 1, false, row, col, alpha, beta);
                     this.board.undoMove(cell);
                     if (moveValue > maxEval) {
                         maxEval = moveValue;
+                    }
+
+                    alpha = Math.max(alpha, moveValue);
+                    if (beta <= alpha) {
+                        break;
                     }
                 }
             }
@@ -71,10 +83,15 @@ public class MiniMax {
                 if (row != -1) {
                     Cell cell = new Cell(row, col, BoardState.TEAM_B);
                     this.board.makeMove(cell);
-                    int moveValue = minimax(depth - 1, true, row, col);
+                    int moveValue = minimax(depth - 1, true, row, col, alpha, beta);
                     this.board.undoMove(cell);
                     if (moveValue < minEval) {
                         minEval = moveValue;
+                    }
+
+                    beta = Math.min(beta, moveValue);
+                    if (beta <= alpha) {
+                        break;
                     }
                 }
             }
