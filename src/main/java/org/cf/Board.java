@@ -145,4 +145,68 @@ public class Board {
 
         return false;
     }
+
+    public int countWindows(BoardState state, int needed) {
+        int result = 0;
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS - 3; c++) {
+                if (countInWindow(r, c, 0, 1, state) == needed) {
+                    result++;
+                }
+            }
+        }
+
+        for (int c = 0; c < COLS; c++) {
+            for (int r = 0; r < ROWS - 3; r++) {
+                if (countInWindow(r, c, 1, 0, state) == needed) {
+                    result++;
+                }
+            }
+        }
+
+        for (int r = 0; r < ROWS - 3; r++) {
+            for (int c = 0; c < COLS - 3; c++) {
+                if (countInWindow(r, c, 1, 1, state) == needed) {
+                    result++;
+                }
+            }
+        }
+
+        for (int r = 3; r < ROWS; r++) {
+            for (int c = 0; c < COLS - 3; c++) {
+                if (countInWindow(r, c, -1, 1, state) == needed) {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private int countInWindow(int startRow, int startCol, int dRow, int dCol, BoardState state) {
+        int count = 0;
+        int empty = 0;
+
+        for (int i = 0; i < 4; i++) {
+            int r = startRow + i * dRow;
+            int c = startCol + i * dCol;
+
+            BoardState current = cells[r][c].getState();
+
+            if (current == state) {
+                count++;
+            } else if (current == BoardState.NONE) {
+                empty++;
+            } else {
+                return -1;
+            }
+        }
+
+        if (count + empty == 4) {
+            return count;
+        }
+
+        return -1;
+    }
 }
