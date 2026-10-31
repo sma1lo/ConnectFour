@@ -71,7 +71,7 @@ public class Board {
         int row = cell.getRow();
         int col = cell.getCol();
 
-        this.cells[row][col] = new Cell(row, col, cell.getState());
+        this.cells[row][col].setState(cell.getState());
 
         moveCount++;
         return true;
@@ -97,7 +97,7 @@ public class Board {
             return false;
         }
 
-        this.cells[row][col] = new Cell(row, col, BoardState.NONE);
+        this.cells[row][col].setState(BoardState.NONE);
         moveCount--;
         return true;
     }
@@ -186,7 +186,6 @@ public class Board {
 
     private int countInWindow(int startRow, int startCol, int dRow, int dCol, BoardState state) {
         int count = 0;
-        int empty = 0;
 
         for (int i = 0; i < 4; i++) {
             int r = startRow + i * dRow;
@@ -196,17 +195,10 @@ public class Board {
 
             if (current == state) {
                 count++;
-            } else if (current == BoardState.NONE) {
-                empty++;
-            } else {
+            } else if (current != BoardState.NONE) {
                 return -1;
             }
         }
-
-        if (count + empty == 4) {
-            return count;
-        }
-
-        return -1;
+        return count;
     }
 }
